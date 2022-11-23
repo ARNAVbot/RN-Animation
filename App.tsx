@@ -15,12 +15,37 @@ const App = () => {
 
   const leftValue = useState(new Animated.Value(0))[0]
 
+  // How is the animation actually played on the screen ?
+
+  // 1. Computation = JS thread; Animation by Native OS
+  // 1.a compute
+  // 1.b serialize
+  // 1.c Transfer it over the bridge to host OS
+  // 1.d Deserialize
+  // 1.e Run the frame
+
+  // 2. Everything by Native OS
+  // 2.a Before ur animation starts -> serialize the whole animation thing
+  // 2.b Native OS would deserialze it
+  // 2.c WIN!!!!
+
+    // Advantages of above
+    // 1 . No more bridge transfers
+    // 2. JS thread is now free for other stuff
+    // 3. Smoother animations
+
   function moveBall() {
     Animated.timing(leftValue, {
-      toValue: 100,
-      duration: 1000,
-      useNativeDriver: false
+      toValue: 1,
+      duration: 5000,
+      useNativeDriver: true
     }).start()
+
+    setTimeout(() => {
+      for(let i=0;i<300000000;i++) {
+
+      }
+    }, 1000);
   }
   
   return (
@@ -36,7 +61,7 @@ const App = () => {
             width: 100,
             height: 100,
             borderRadius: 100/2,
-            marginLeft: leftValue,
+            opacity: leftValue,
             backgroundColor: 'red',
         }}
         />
