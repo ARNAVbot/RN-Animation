@@ -20,26 +20,31 @@ const App = () => {
       // onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
       onPanResponderGrant: () => {
-        for(let i=0;i<100000000;i++) {
+        // for(let i=0;i<100000000;i++) {
 
-        }
+        // }
         console.log('PANd responder was granted');
         pan.setOffset({
           x: pan.x._value,
           y: pan.y._value
         });
       },
-      onPanResponderMove: Animated.event(
-        [
-          null,
-          { dx: pan.x, dy: pan.y }
-        ]
-      ),
+      onPanResponderMove: (_, gesture) => {
+        pan.x.setValue(gesture.dx)
+        pan.y.setValue(gesture.dy)
+      },
       onPanResponderRelease: () => {
         pan.flattenOffset();
       }
     })
   )[0];
+
+  setTimeout(() => {
+    console.log(' starting timeout');
+    for(let i=0;i<100000000;i++) {
+
+        }
+  }, 3000)
 
   console.log(panResponder.panHandlers)
   console.log(pan.getLayout());
@@ -52,10 +57,20 @@ const App = () => {
             {
             width: 100,
             height: 100,
+            transform: [
+              {
+                translateX: pan.x,
+              },
+              {
+                translateY: pan.y
+              }
+            ],
+            // top: pan.y,
+            // left: pan.x,
             borderRadius: 100/2,
             backgroundColor: 'red',
         }, 
-        pan.getLayout()
+        
       ]}
         {...panResponder.panHandlers}
         />
