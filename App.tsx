@@ -36,16 +36,16 @@ const App = () => {
 
   function moveBall() {
     Animated.timing(leftValue, {
-      toValue: 1,
+      toValue: 100,
       duration: 5000,
       useNativeDriver: true
     }).start()
 
-    setTimeout(() => {
-      for(let i=0;i<300000000;i++) {
+    // setTimeout(() => {
+    //   for(let i=0;i<300000000;i++) {
 
-      }
-    }, 1000);
+    //   }
+    // }, 1000);
   }
   
   return (
@@ -61,7 +61,7 @@ const App = () => {
             width: 100,
             height: 100,
             borderRadius: 100/2,
-            opacity: leftValue,
+            transform: [{translateX: leftValue}],
             backgroundColor: 'red',
         }}
         />
