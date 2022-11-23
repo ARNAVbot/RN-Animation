@@ -9,52 +9,56 @@
  */
 
 import React, {useState, type PropsWithChildren} from 'react';
-import { Animated, Text, TouchableOpacity, View} from 'react-native';
+import { Animated, PanResponder, Text, TouchableOpacity, View} from 'react-native';
 
 const App = () => {
 
-  const opacity = useState(new Animated.Value(0))[0]
+  const pan = useState(new Animated.ValueXY())[0];
 
-  function fadeinBall() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 1000,
-      useNativeDriver: true
-    }).start();
-  }
+  const panResponder = useState(
+    PanResponder.create({
+      // onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        for(let i=0;i<100000000;i++) {
 
-  function fadeoutBall() {
-    Animated.timing(opacity, {
-      toValue: 0,
-      duration: 1000,
-      useNativeDriver: true
-    }).start();
-  }
+        }
+        console.log('PANd responder was granted');
+        pan.setOffset({
+          x: pan.x._value,
+          y: pan.y._value
+        });
+      },
+      onPanResponderMove: Animated.event(
+        [
+          null,
+          { dx: pan.x, dy: pan.y }
+        ]
+      ),
+      onPanResponderRelease: () => {
+        pan.flattenOffset();
+      }
+    })
+  )[0];
+
+  console.log(panResponder.panHandlers)
+  console.log(pan.getLayout());
   
   return (
     <View
       style={{flex: 1}}>
-      <View style ={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
         <Animated.View
-          style={{
+          style={[
+            {
             width: 100,
             height: 100,
             borderRadius: 100/2,
-            opacity,
             backgroundColor: 'red',
-        }}
+        }, 
+        pan.getLayout()
+      ]}
+        {...panResponder.panHandlers}
         />
-        <TouchableOpacity onPress={fadeinBall}>
-          <Text> Fade in</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={fadeoutBall}>
-          <Text> Fade out</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
